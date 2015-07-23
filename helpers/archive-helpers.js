@@ -34,7 +34,13 @@ exports.isUrlInList = function(){
 exports.addUrlToList = function(){
 };
 
-exports.isUrlArchived = function(){
+exports.isUrlArchived = function(sitesPath, requestedUrl){
+  // look inside sitesPath (archives/sites)
+    // check if file that corresponds to requestedUrl
+    // if yes return the file
+    // else null would be treated by request-handler.js
+
+  if ()
 };
 
 exports.downloadUrls = function(){
