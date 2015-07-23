@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-
+var parsedUrl = require('url-parse');
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
@@ -31,22 +31,33 @@ exports.readListOfUrls = function(){
 exports.isUrlInList = function(){
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(requestedUrl, listPath){
+  console.log('URL', requestedUrl);
+  requestedUrl += '\n';
+  console.log('NEW URL', requestedUrl);
+  fs.appendFile(listPath, requestedUrl);
+  console.log('addedData');
 };
 
 exports.isUrlArchived = function(sitesPath, requestedUrl){
+  // if req.url starts with www. split on
+  var route = '';
+  if ((/www/i).test(requestedUrl)) {
+    requestedUrl.split('.');
+    route = '/' + requestedUrl[1];
+  } else {
+    // else assume / somename we could check for the /
+    route = requestedUrl;
+  }
 
   // look inside sitesPath (archives/sites)
   fs.readdir(sitesPath,function(err,files){
-    console.log(files)
     var result = null;
     files.forEach(function(file){
     // check if file that corresponds to requestedUrl
-        console.log(typeof file)
-        console.log(requestedUrl)
       if(file === requestedUrl){
       // if yes return the file
-        result = file;
+        result = route;
       }
     });
     // else null would be treated by request-handler.js

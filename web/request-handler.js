@@ -7,6 +7,7 @@ var headers = header.headers;
 var archive = require('../helpers/archive-helpers');
 var indexHtml = archive.paths.siteAssets + '/index.html';
 var pathToSites = archive.paths.archivedSites;
+var pathToText = archive.paths.list;
 
 // require more modules/folders here!
 
@@ -26,40 +27,30 @@ exports.handleRequest = function (req, res) {
       });
 
     }else{
-      // console.log('\n\n', 'else', '\n\n');
-      if(archive.isUrlArchived(archive.paths.archivedSites, req.url)){
 
-        fs.readFile(pathToSites + req.url, 'utf8' ,function (err, html) {
+      if (archive.isUrlArchived(pathToSites, req.url) !== null) {
+        var temp = path.join(pathToSites, req.url);
+        fs.readFile(temp, 'utf8' ,function (err, html) {
           if (err) {
-            throw err;
+            res.writeHead(404, headers);
+            res.end(); 
           } else {
             res.writeHead(200, headers);
             res.end(html);
           }
         });
-
-      }else{
-        res.writeHead(404, headers);
-        res.end(); 
       }
-
     }
 
-    // } else if (req.url === '/www.google.com') {
-    //   // if the pathname exits in sites.txt display sites folder
-    //   console.log('req url', req.url);
-    //   indexHtml = archive.paths.archivedSites + req.url;
-    //   fs.readFile(indexHtml, 'utf8' ,function (err, html) {
-    //     if (err) {
-    //       throw err;
-    //     } else {
-    //       res.writeHead(200, headers);
-    //       res.end(html);
-    //     }
-    //   });
-
-    // } else {
-
-    // }
+  } else if (req.method === 'POST') {
+    console.log('POSTING');
+    if ((/www/i).test(req.url)) {
+      console.log('url well formed');
+      archive.addUrlToList(pathToText, req.url);
+    } else {
+      console.log('url ILL formed');
+      res.writeHead(302, headers);
+      res.end();
+    }
   }
 };
