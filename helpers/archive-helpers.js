@@ -35,12 +35,23 @@ exports.addUrlToList = function(){
 };
 
 exports.isUrlArchived = function(sitesPath, requestedUrl){
-  // look inside sitesPath (archives/sites)
-    // check if file that corresponds to requestedUrl
-    // if yes return the file
-    // else null would be treated by request-handler.js
 
-  if ()
+  // look inside sitesPath (archives/sites)
+  fs.readdir(sitesPath,function(err,files){
+    console.log(files)
+    var result = null;
+    files.forEach(function(file){
+    // check if file that corresponds to requestedUrl
+        console.log(typeof file)
+        console.log(requestedUrl)
+      if(file === requestedUrl){
+      // if yes return the file
+        result = file;
+      }
+    });
+    // else null would be treated by request-handler.js
+    return result;
+  });
 };
 
 exports.downloadUrls = function(){
